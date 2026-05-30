@@ -136,8 +136,8 @@ func _animate_steps(delta: float) -> void:
 	if not astronaut:
 		return
 	# Скорость по горизонтали — основа цикла шагов
-	var horiz := Vector2(velocity.x, velocity.z).length()
-	var speed_ratio := clamp(horiz / SPEED, 0.0, 1.0)
+	var horiz: float = Vector2(velocity.x, velocity.z).length()
+	var speed_ratio: float = clampf(horiz / SPEED, 0.0, 1.0)
 	if speed_ratio > 0.05:
 		_step_phase += delta * STEP_FREQUENCY * speed_ratio
 	# Bob (вертикальное подскакивание)
