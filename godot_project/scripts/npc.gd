@@ -3,7 +3,7 @@ extends Interactable
 @export var npc_name: String = "Профессор Звёздочкин"
 @export_multiline var intro_line: String = "Привет! Помоги собрать инструменты — найди 3 ящика на космодроме."
 @export_multiline var progress_line: String = "Молодец, ищи дальше!"
-@export_multiline var complete_line: String = "Отлично! Все детали собраны. Можем запускать ракету!"
+@export_multiline var complete_line: String = "Отлично! Все детали собраны. Идите в ракету — она вон там на стартовой площадке!"
 @export var quest_id: String = "earth_tools"
 @export var quest_title: String = "Собрать инструменты"
 @export var quest_target: int = 3

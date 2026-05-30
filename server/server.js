@@ -11,6 +11,14 @@ function generateId() {
   return randomBytes(4).toString("hex");
 }
 
+function newRoomState() {
+  return {
+    players: new Map(),
+    collectedItems: new Set(),  // "quest_id:item_id"
+    launchVoters: new Set(),    // player ids voted for launch
+  };
+}
+
 function generateRoomCode() {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let code = "";
@@ -58,7 +66,7 @@ wss.on("connection", (ws) => {
         let code;
         do { code = generateRoomCode(); } while (rooms.has(code));
 
-        const room = { players: new Map() };
+        const room = newRoomState();
         room.players.set(id, { ws, name: msg.name || "Космонавт" });
         rooms.set(code, room);
         client.roomCode = code;
@@ -84,16 +92,63 @@ wss.on("connection", (ws) => {
         room.players.set(id, { ws, name: playerName });
         client.roomCode = code;
 
-        // Сообщаем вошедшему список игроков
+        // Сообщаем вошедшему список игроков и собранные предметы
         const playerList = [];
         for (const [pid, p] of room.players) {
           if (pid !== id) playerList.push({ id: pid, name: p.name });
         }
-        send(ws, { event: "room_joined", code, players: playerList });
+        send(ws, {
+          event: "room_joined",
+          code,
+          players: playerList,
+          collected: Array.from(room.collectedItems),
+        });
 
         // Остальным — новый игрок
         broadcast(code, { event: "player_joined", id, name: playerName }, ws);
         console.log(`[R] ${id} (${playerName}) joined room ${code}`);
+        break;
+      }
+
+      case "collect_item": {
+        const code = client.roomCode;
+        const room = rooms.get(code);
+        if (!room) return;
+        const key = `${msg.quest_id}:${msg.item_id}`;
+        if (room.collectedItems.has(key)) return;
+        room.collectedItems.add(key);
+        // Шлём всем (включая отправителя), чтобы все клиенты состояния были одинаковы
+        for (const [, p] of room.players) {
+          send(p.ws, {
+            event: "item_collected",
+            quest_id: msg.quest_id,
+            item_id: msg.item_id,
+            by: id,
+          });
+        }
+        break;
+      }
+
+      case "launch_vote": {
+        const code = client.roomCode;
+        const room = rooms.get(code);
+        if (!room) return;
+        room.launchVoters.add(id);
+        const required = room.players.size;
+        const have = room.launchVoters.size;
+        for (const [, p] of room.players) {
+          send(p.ws, {
+            event: "launch_progress",
+            have,
+            required,
+          });
+        }
+        if (have >= required) {
+          for (const [, p] of room.players) {
+            send(p.ws, { event: "launch_now" });
+          }
+          console.log(`[R] Launch in room ${code}!`);
+        }
         break;
       }
 

@@ -19,9 +19,14 @@ func start_quest(quest_id: String, title: String, target: int) -> void:
 	emit_signal("quest_started", quest_id, title)
 	emit_signal("journal_message", "Новое задание: %s (0/%d)" % [title, target])
 
-func collect_item(quest_id: String, item_id: String) -> bool:
+func ensure_quest(quest_id: String, title: String, target: int) -> void:
 	if not active_quests.has(quest_id):
-		return false
+		start_quest(quest_id, title, target)
+
+func collect_item(quest_id: String, item_id: String) -> bool:
+	# Если кто-то собрал предмет до того, как мы поговорили с NPC — заводим квест автоматически
+	if not active_quests.has(quest_id):
+		start_quest(quest_id, "Собрать предметы", 3)
 	var q = active_quests[quest_id]
 	if q.items.has(item_id):
 		return false

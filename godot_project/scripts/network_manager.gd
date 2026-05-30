@@ -10,6 +10,10 @@ signal room_joined(room_code: String, players: Array)
 signal player_joined(player_id: String, player_name: String)
 signal player_left(player_id: String)
 signal player_moved(player_id: String, position: Vector3, rotation: float)
+signal item_collected(quest_id: String, item_id: String, by_id: String)
+signal initial_collected_received(items: Array)
+signal launch_progress(have: int, required: int)
+signal launch_now
 signal error_occurred(message: String)
 
 var socket := WebSocketPeer.new()
@@ -19,6 +23,7 @@ var room_code := ""
 var is_connected := false
 var initial_players: Array = []  # игроки, бывшие в комнате до нашего входа
 var room_players: Dictionary = {}  # id → name, все известные игроки комнаты (кроме нас)
+var initial_collected: Array = []  # ["quest_id:item_id", ...] на момент входа
 var _state := WebSocketPeer.STATE_CLOSED
 
 func _ready() -> void:
@@ -37,6 +42,12 @@ func create_room() -> void:
 
 func join_room(code: String) -> void:
 	_send({"action": "join_room", "code": code, "name": my_name})
+
+func send_collect_item(quest_id: String, item_id: String) -> void:
+	_send({"action": "collect_item", "quest_id": quest_id, "item_id": item_id})
+
+func send_launch_vote() -> void:
+	_send({"action": "launch_vote"})
 
 func send_position(position: Vector3, rotation_y: float) -> void:
 	_send({
@@ -101,10 +112,12 @@ func _handle_message(text: String) -> void:
 			room_code = data.get("code", "")
 			var players = data.get("players", [])
 			initial_players = players
+			initial_collected = data.get("collected", [])
 			room_players.clear()
 			for p in players:
 				room_players[p.get("id", "")] = p.get("name", "Космонавт")
 			emit_signal("room_joined", room_code, players)
+			emit_signal("initial_collected_received", initial_collected)
 		"player_joined":
 			var pid = data.get("id", "")
 			var pname = data.get("name", "Космонавт")
@@ -121,5 +134,11 @@ func _handle_message(text: String) -> void:
 				data.get("z", 0.0)
 			)
 			emit_signal("player_moved", data.get("id", ""), pos, data.get("ry", 0.0))
+		"item_collected":
+			emit_signal("item_collected", data.get("quest_id", ""), data.get("item_id", ""), data.get("by", ""))
+		"launch_progress":
+			emit_signal("launch_progress", int(data.get("have", 0)), int(data.get("required", 0)))
+		"launch_now":
+			emit_signal("launch_now")
 		"error":
 			emit_signal("error_occurred", data.get("message", "Неизвестная ошибка"))
