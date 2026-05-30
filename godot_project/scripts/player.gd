@@ -24,6 +24,14 @@ signal dialog_requested(npc_name: String, text: String)
 
 @onready var camera_pivot: Node3D = $CameraPivot
 @onready var camera: Camera3D = $CameraPivot/Camera3D
+@onready var astronaut: Node3D = $Astronaut
+
+# Параметры процедурной анимации шагов
+const STEP_FREQUENCY := 8.0   # сколько шагов в секунду на полной скорости
+const STEP_BOB := 0.06        # высота "подпрыгивания"
+const STEP_TILT := 0.12       # амплитуда наклона корпуса (радианы)
+var _step_phase := 0.0
+var _astro_base_y := 0.0
 
 func _ready() -> void:
 	if is_local:
@@ -34,6 +42,8 @@ func _ready() -> void:
 		if camera:
 			camera.current = false
 	_create_name_label()
+	if astronaut:
+		_astro_base_y = astronaut.position.y
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_local:
@@ -71,6 +81,7 @@ func setup(p_id: String, p_name: String, local: bool) -> void:
 	is_local = local
 
 func _physics_process(delta: float) -> void:
+	_animate_steps(delta)
 	if not is_local:
 		return
 
@@ -120,6 +131,21 @@ func _physics_process(delta: float) -> void:
 func apply_remote_state(pos: Vector3, rot_y: float) -> void:
 	global_position = global_position.lerp(pos, 0.3)
 	rotation.y = lerp_angle(rotation.y, rot_y, 0.3)
+
+func _animate_steps(delta: float) -> void:
+	if not astronaut:
+		return
+	# Скорость по горизонтали — основа цикла шагов
+	var horiz := Vector2(velocity.x, velocity.z).length()
+	var speed_ratio := clamp(horiz / SPEED, 0.0, 1.0)
+	if speed_ratio > 0.05:
+		_step_phase += delta * STEP_FREQUENCY * speed_ratio
+	# Bob (вертикальное подскакивание)
+	var bob := abs(sin(_step_phase)) * STEP_BOB * speed_ratio
+	astronaut.position.y = _astro_base_y + bob
+	# Tilt (покачивание влево-вправо в такт)
+	var tilt := sin(_step_phase) * STEP_TILT * speed_ratio
+	astronaut.rotation.z = tilt
 
 func _update_interactable() -> void:
 	var best: Node = null
