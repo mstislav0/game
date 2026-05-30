@@ -68,11 +68,15 @@ func _play_launch_animation() -> void:
 				p.reparent(rocket, true)
 			p.global_transform = world_xform
 
+	# Кокпит тоже летит с ракетой
+	var cockpit = get_node_or_null("Cockpit")
+	if cockpit:
+		var c_xform: Transform3D = cockpit.global_transform
+		cockpit.reparent(rocket, true)
+		cockpit.global_transform = c_xform
+
 	# Отсчёт 3-2-1 (HUD сам показывает), ракета стоит
 	await get_tree().create_timer(3.5).timeout
-
-	# Дым под ракетой
-	_spawn_launch_smoke()
 
 	# Взлёт: ускоряющееся движение вверх
 	var start_y := rocket.position.y
@@ -89,11 +93,6 @@ func _play_launch_animation() -> void:
 
 	# Переход на сцену Космоса
 	get_tree().change_scene_to_file("res://scenes/space.tscn")
-
-func _spawn_launch_smoke() -> void:
-	var smoke = preload("res://scenes/launch_smoke.tscn").instantiate()
-	smoke.position = Vector3(rocket.position.x, 0.5, rocket.position.z)
-	add_child(smoke)
 
 func _shake_camera(cam: Camera3D, duration: float) -> void:
 	var orig := cam.position
