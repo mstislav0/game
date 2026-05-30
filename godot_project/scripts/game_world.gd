@@ -27,19 +27,6 @@ func _ready() -> void:
 	for pid in NetworkManager.room_players.keys():
 		_on_player_joined(pid, NetworkManager.room_players[pid])
 
-	# Центрируем все статичные Kenney-инстансы по XZ относительно их origin
-	for name_ in [
-		"Rocket", "HangarLarge", "HangarSmall", "HangarSmall2",
-		"Generator", "Speeder", "Cargo",
-		"Crater1", "Crater2",
-		"RockA1", "RockA2", "RockB1", "RockB2",
-		"SmallRock1", "SmallRock2", "SmallRock3",
-		"GantryA", "GantryB", "GantryC", "GantryD",
-	]:
-		var n = get_node_or_null(name_)
-		if n:
-			Util.center_model_xz(n)
-
 func _play_launch_animation() -> void:
 	# Запрашиваем у HUD кат-сцену (отсчёт + fade)
 	var hud = get_node_or_null("HUD")

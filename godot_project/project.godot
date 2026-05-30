@@ -24,7 +24,6 @@ config/icon="res://assets/icon.svg"
 
 NetworkManager="*res://scripts/network_manager.gd"
 QuestManager="*res://scripts/quest_manager.gd"
-Util="*res://scripts/util.gd"
 
 [display]
 

@@ -13,10 +13,6 @@ func _ready() -> void:
 	var key = "%s:%s" % [quest_id, item_id]
 	if NetworkManager.initial_collected.has(key):
 		queue_free()
-		return
-	var model := get_node_or_null("Model")
-	if model:
-		Util.center_model_xz(model)
 
 func _on_interacted(_player: Node) -> void:
 	# Просим сервер. Реальное удаление произойдёт в _on_item_collected
