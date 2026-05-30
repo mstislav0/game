@@ -1,7 +1,16 @@
 extends Node
 
-# Адрес WebSocket-сервера
-const SERVER_URL = "ws://localhost:8765"
+# Список адресов, которые клиент пробует по очереди.
+# Первый, к которому удалось подключиться — побеждает.
+# - localhost   → когда сервер запущен на этом же ПК
+# - 192.168.1.72 → основной Mac в локальной сети (где сервер)
+# - 194.85.251.132 → VPS (когда задеплоено)
+const SERVER_URLS := [
+	"ws://localhost:8765",
+	"ws://192.168.1.72:8765",
+	"ws://194.85.251.132:8765",
+]
+const CONNECT_TIMEOUT := 2.5  # сек на попытку
 
 signal connected_to_server
 signal disconnected_from_server
@@ -25,17 +34,34 @@ var initial_players: Array = []  # игроки, бывшие в комнате 
 var room_players: Dictionary = {}  # id → name, все известные игроки комнаты (кроме нас)
 var initial_collected: Array = []  # ["quest_id:item_id", ...] на момент входа
 var _state := WebSocketPeer.STATE_CLOSED
+var _try_index := -1
+var _try_started_at := 0.0
+var _trying := false
 
 func _ready() -> void:
 	set_process(true)
 
 func connect_to_server(player_name: String) -> void:
 	my_name = player_name
-	print("[NET] Connecting to: ", SERVER_URL)
-	var err = socket.connect_to_url(SERVER_URL)
-	print("[NET] connect_to_url result: ", err)
+	_try_index = -1
+	_trying = true
+	_try_next()
+
+func _try_next() -> void:
+	_try_index += 1
+	if _try_index >= SERVER_URLS.size():
+		_trying = false
+		emit_signal("error_occurred", "Не удалось подключиться ни к одному серверу")
+		return
+	var url: String = SERVER_URLS[_try_index]
+	print("[NET] Trying ", url, " ...")
+	socket = WebSocketPeer.new()
+	_state = WebSocketPeer.STATE_CLOSED
+	var err = socket.connect_to_url(url)
+	_try_started_at = Time.get_ticks_msec() / 1000.0
 	if err != OK:
-		emit_signal("error_occurred", "Не удалось подключиться к серверу (код %d)" % err)
+		print("[NET] connect_to_url failed for ", url, " err=", err)
+		_try_next()
 
 func create_room() -> void:
 	_send({"action": "create_room", "name": my_name})
@@ -66,6 +92,15 @@ func _process(_delta: float) -> void:
 	socket.poll()
 	var state = socket.get_ready_state()
 
+	# Таймаут попытки подключения
+	if _trying and state == WebSocketPeer.STATE_CONNECTING:
+		var now = Time.get_ticks_msec() / 1000.0
+		if now - _try_started_at > CONNECT_TIMEOUT:
+			print("[NET] Timeout on ", SERVER_URLS[_try_index])
+			socket.close()
+			_try_next()
+			return
+
 	if state != _state:
 		_on_state_changed(state)
 		_state = state
@@ -80,12 +115,16 @@ func _on_state_changed(state: int) -> void:
 	match state:
 		WebSocketPeer.STATE_OPEN:
 			is_connected = true
+			_trying = false
+			print("[NET] Connected to ", SERVER_URLS[_try_index])
 			emit_signal("connected_to_server")
 		WebSocketPeer.STATE_CLOSED:
 			is_connected = false
-			var code := socket.get_close_code()
-			var reason := socket.get_close_reason()
-			print("[NET] Closed. code=", code, " reason='", reason, "'")
+			# Если соединение умерло во время попыток — пробуем следующий адрес
+			if _trying:
+				print("[NET] Closed while trying ", SERVER_URLS[_try_index], " — next")
+				_try_next()
+				return
 			emit_signal("disconnected_from_server")
 
 func _state_name(s: int) -> String:
