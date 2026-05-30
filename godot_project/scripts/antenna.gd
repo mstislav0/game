@@ -11,6 +11,9 @@ func _ready() -> void:
 	QuestManager.ensure_quest(QUEST_ID, "Активировать антенну связи", 1)
 	if NetworkManager.initial_collected.has("%s:%s" % [QUEST_ID, ITEM_ID]):
 		_mark_done()
+	var model := get_node_or_null("Model")
+	if model:
+		Util.center_model_xz(model)
 
 func _on_interacted(_player: Node) -> void:
 	NetworkManager.send_collect_item(QUEST_ID, ITEM_ID)

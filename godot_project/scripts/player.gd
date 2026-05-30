@@ -34,6 +34,9 @@ func _ready() -> void:
 		if camera:
 			camera.current = false
 	_create_name_label()
+	var astro := get_node_or_null("Astronaut")
+	if astro:
+		Util.center_model_xz(astro)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_local:

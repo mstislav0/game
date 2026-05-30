@@ -18,6 +18,9 @@ func _ready() -> void:
 	var label = get_node_or_null("NameLabel")
 	if label:
 		label.text = npc_name
+	var astro := get_node_or_null("Astronaut")
+	if astro:
+		Util.center_model_xz(astro)
 
 func _on_interacted(_player: Node) -> void:
 	var line: String
