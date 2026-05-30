@@ -22,7 +22,6 @@ var _nearest_interactable: Node = null
 signal interactable_changed(interactable: Node)
 signal dialog_requested(npc_name: String, text: String)
 
-@onready var mesh: MeshInstance3D = $MeshInstance3D
 @onready var camera_pivot: Node3D = $CameraPivot
 @onready var camera: Camera3D = $CameraPivot/Camera3D
 
