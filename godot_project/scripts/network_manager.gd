@@ -26,9 +26,11 @@ func _ready() -> void:
 
 func connect_to_server(player_name: String) -> void:
 	my_name = player_name
+	print("[NET] Connecting to: ", SERVER_URL)
 	var err = socket.connect_to_url(SERVER_URL)
+	print("[NET] connect_to_url result: ", err)
 	if err != OK:
-		emit_signal("error_occurred", "Не удалось подключиться к серверу")
+		emit_signal("error_occurred", "Не удалось подключиться к серверу (код %d)" % err)
 
 func create_room() -> void:
 	_send({"action": "create_room", "name": my_name})
@@ -63,13 +65,25 @@ func _process(_delta: float) -> void:
 		_handle_message(text)
 
 func _on_state_changed(state: int) -> void:
+	print("[NET] State changed → ", state, " (", _state_name(state), ")")
 	match state:
 		WebSocketPeer.STATE_OPEN:
 			is_connected = true
 			emit_signal("connected_to_server")
 		WebSocketPeer.STATE_CLOSED:
 			is_connected = false
+			var code := socket.get_close_code()
+			var reason := socket.get_close_reason()
+			print("[NET] Closed. code=", code, " reason='", reason, "'")
 			emit_signal("disconnected_from_server")
+
+func _state_name(s: int) -> String:
+	match s:
+		WebSocketPeer.STATE_CONNECTING: return "CONNECTING"
+		WebSocketPeer.STATE_OPEN: return "OPEN"
+		WebSocketPeer.STATE_CLOSING: return "CLOSING"
+		WebSocketPeer.STATE_CLOSED: return "CLOSED"
+	return "?"
 
 func _handle_message(text: String) -> void:
 	var data = JSON.parse_string(text)
