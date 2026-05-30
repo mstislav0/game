@@ -59,21 +59,30 @@ func _play_launch_animation() -> void:
 		local.set_physics_process(false)
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
+	# Привязываем всех игроков к ракете — полетят вместе
+	for pid in players:
+		var p = players[pid]
+		if p and p is Node3D:
+			var world_xform: Transform3D = p.global_transform
+			if p.get_parent() != rocket:
+				p.reparent(rocket, true)
+			p.global_transform = world_xform
+
 	# Отсчёт 3-2-1 (HUD сам показывает), ракета стоит
 	await get_tree().create_timer(3.5).timeout
 
-	# Дым: добавим простые GPUParticles3D под ракету
+	# Дым под ракетой
 	_spawn_launch_smoke()
 
 	# Взлёт: ускоряющееся движение вверх
 	var start_y := rocket.position.y
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	tween.tween_property(rocket, "position:y", start_y + 200.0, 4.0)
+	tween.tween_property(rocket, "position:y", start_y + 300.0, 4.5)
 
-	# Камера-шейк (через смещение позиции, лёгкий)
+	# Камера-шейк
 	if local and local.has_node("CameraPivot/Camera3D"):
-		_shake_camera(local.get_node("CameraPivot/Camera3D"), 4.0)
+		_shake_camera(local.get_node("CameraPivot/Camera3D"), 4.5)
 
 	await tween.finished
 	await get_tree().create_timer(0.3).timeout

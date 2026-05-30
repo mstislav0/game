@@ -1,28 +1,30 @@
 extends Interactable
 
 @export var required_quests: Array[String] = ["earth_tools", "earth_fuel", "earth_antenna"]
-var _voted := false
+# Куда телепортировать игрока, когда он входит в ракету (мировые координаты).
+# Высота ~30м соответствует кабине внутри 40-метровой ракеты.
+@export var cockpit_position: Vector3 = Vector3(0, 30, -60)
+
+var _entered: bool = false
 
 func _ready() -> void:
-	prompt_text = "[E] Запустить ракету"
+	prompt_text = "[E] Зайти в ракету"
 	interacted.connect(_on_interacted)
-	NetworkManager.launch_progress.connect(_on_launch_progress)
 	NetworkManager.launch_now.connect(_on_launch_now)
 
-func _on_interacted(_player: Node) -> void:
-	if _voted:
+func _on_interacted(player: Node) -> void:
+	if _entered:
 		return
 	for qid in required_quests:
 		if not QuestManager.is_quest_complete(qid):
-			QuestManager.emit_signal("journal_message", "Ещё не всё готово! Соберите инструменты, топливо и активируйте антенну.")
+			QuestManager.emit_signal("journal_message", "Сначала выполните все 3 задания!")
 			return
-	_voted = true
+	_entered = true
+	# Поднимаем игрока внутрь ракеты
+	if player is Node3D:
+		player.global_position = cockpit_position
 	NetworkManager.send_launch_vote()
-	QuestManager.emit_signal("journal_message", "Вы готовы к запуску. Ждём остальных...")
-
-func _on_launch_progress(have: int, required: int) -> void:
-	QuestManager.emit_signal("journal_message", "К запуску готовы: %d/%d" % [have, required])
 
 func _on_launch_now() -> void:
-	# Сцену меняет game_world после анимации
-	QuestManager.emit_signal("journal_message", "🚀 Запуск!")
+	# Анимацию делает game_world
+	pass

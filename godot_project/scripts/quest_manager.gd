@@ -1,8 +1,8 @@
 extends Node
 
-signal quest_started(quest_id: String, title: String)
+signal quest_started(quest_id: String, title: String, target: int)
 signal quest_progress(quest_id: String, current: int, total: int)
-signal quest_completed(quest_id: String)
+signal quest_completed(quest_id: String, title: String)
 signal journal_message(text: String)
 
 var active_quests: Dictionary = {}  # quest_id → { title, target, current, items_collected }
@@ -16,15 +16,13 @@ func start_quest(quest_id: String, title: String, target: int) -> void:
 		"current": 0,
 		"items": {}
 	}
-	emit_signal("quest_started", quest_id, title)
-	emit_signal("journal_message", "Новое задание: %s (0/%d)" % [title, target])
+	emit_signal("quest_started", quest_id, title, target)
 
 func ensure_quest(quest_id: String, title: String, target: int) -> void:
 	if not active_quests.has(quest_id):
 		start_quest(quest_id, title, target)
 
 func collect_item(quest_id: String, item_id: String) -> bool:
-	# Если кто-то собрал предмет до того, как мы поговорили с NPC — заводим квест автоматически
 	if not active_quests.has(quest_id):
 		start_quest(quest_id, "Собрать предметы", 3)
 	var q = active_quests[quest_id]
@@ -33,10 +31,8 @@ func collect_item(quest_id: String, item_id: String) -> bool:
 	q.items[item_id] = true
 	q.current += 1
 	emit_signal("quest_progress", quest_id, q.current, q.target)
-	emit_signal("journal_message", "%s: %d/%d" % [q.title, q.current, q.target])
 	if q.current >= q.target:
-		emit_signal("quest_completed", quest_id)
-		emit_signal("journal_message", "✓ Задание выполнено: %s" % q.title)
+		emit_signal("quest_completed", quest_id, q.title)
 	return true
 
 func is_quest_complete(quest_id: String) -> bool:
@@ -49,3 +45,8 @@ func is_item_collected(quest_id: String, item_id: String) -> bool:
 	if not active_quests.has(quest_id):
 		return false
 	return active_quests[quest_id].items.has(item_id)
+
+func get_quest_title(quest_id: String) -> String:
+	if active_quests.has(quest_id):
+		return active_quests[quest_id].title
+	return quest_id

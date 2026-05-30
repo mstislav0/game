@@ -3,32 +3,35 @@
 [sub_resource type="StandardMaterial3D" id="SmokeMat"]
 transparency = 1
 shading_mode = 0
-albedo_color = Color(0.9, 0.85, 0.8, 0.6)
+albedo_color = Color(0.92, 0.88, 0.82, 0.7)
 emission_enabled = true
-emission = Color(1, 0.7, 0.3, 1)
-emission_energy_multiplier = 1.4
+emission = Color(1, 0.6, 0.25, 1)
+emission_energy_multiplier = 1.8
 
 [sub_resource type="SphereMesh" id="SmokeMesh"]
 material = SubResource("SmokeMat")
-radius = 0.5
-height = 1.0
+radius = 1.0
+height = 2.0
 
 [sub_resource type="ParticleProcessMaterial" id="ProcMat"]
 direction = Vector3(0, -1, 0)
-spread = 35.0
-initial_velocity_min = 4.0
-initial_velocity_max = 8.0
-gravity = Vector3(0, -2, 0)
-scale_min = 0.6
-scale_max = 1.4
-scale_curve = null
-color = Color(1, 0.95, 0.8, 1)
+spread = 70.0
+initial_velocity_min = 18.0
+initial_velocity_max = 35.0
+gravity = Vector3(0, -1, 0)
+scale_min = 3.0
+scale_max = 8.0
+color = Color(1, 0.95, 0.85, 1)
+turbulence_enabled = true
+turbulence_noise_strength = 1.5
+turbulence_noise_speed = Vector3(0.5, 0.5, 0.5)
 
 [node name="LaunchSmoke" type="GPUParticles3D"]
-amount = 200
-lifetime = 2.5
-preprocess = 0.2
-explosiveness = 0.0
-randomness = 0.5
+amount = 1500
+lifetime = 5.0
+preprocess = 0.3
+explosiveness = 0.05
+randomness = 0.6
+visibility_aabb = AABB(-30, -5, -30, 60, 60, 60)
 process_material = SubResource("ProcMat")
 draw_pass_1 = SubResource("SmokeMesh")
