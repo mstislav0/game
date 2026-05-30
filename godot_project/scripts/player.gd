@@ -1,7 +1,8 @@
 extends CharacterBody3D
 
 const SPEED := 5.0
-const GRAVITY := -9.8
+const GRAVITY := -20.0
+const JUMP_VELOCITY := 7.5
 const SEND_INTERVAL := 0.05  # 20 раз в секунду
 const MOUSE_SENSITIVITY := 0.0035
 const PITCH_MIN := -1.0
@@ -70,7 +71,10 @@ func _physics_process(delta: float) -> void:
 	# Pitch применяется к камере, yaw уже на самом теле
 	camera.rotation.x = _cam_pitch
 
-	if not is_on_floor():
+	if is_on_floor():
+		if Input.is_action_just_pressed("jump"):
+			velocity.y = JUMP_VELOCITY
+	else:
 		velocity.y += GRAVITY * delta
 
 	var input_dir = Vector2.ZERO
