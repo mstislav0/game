@@ -1,0 +1,22 @@
+# Godot
+godot_project/.godot/
+godot_project/.import/
+godot_project/export.cfg
+godot_project/export_presets.cfg
+*.translation
+
+# Web build output
+web_build/
+
+# Node
+server/node_modules/
+server/npm-debug.log*
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Editors
+.idea/
+.vscode/
+*.swp
