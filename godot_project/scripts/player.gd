@@ -141,10 +141,10 @@ func _animate_steps(delta: float) -> void:
 	if speed_ratio > 0.05:
 		_step_phase += delta * STEP_FREQUENCY * speed_ratio
 	# Bob (вертикальное подскакивание)
-	var bob := abs(sin(_step_phase)) * STEP_BOB * speed_ratio
+	var bob: float = absf(sin(_step_phase)) * STEP_BOB * speed_ratio
 	astronaut.position.y = _astro_base_y + bob
 	# Tilt (покачивание влево-вправо в такт)
-	var tilt := sin(_step_phase) * STEP_TILT * speed_ratio
+	var tilt: float = sin(_step_phase) * STEP_TILT * speed_ratio
 	astronaut.rotation.z = tilt
 
 func _update_interactable() -> void:
