@@ -25,6 +25,14 @@ config/icon="res://assets/icon.svg"
 NetworkManager="*res://scripts/network_manager.gd"
 QuestManager="*res://scripts/quest_manager.gd"
 
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/size/mode=3
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
 [importer_defaults]
 
 scene={
@@ -48,13 +56,6 @@ scene={
 "nodes/use_node_type_suffixes": true,
 "skins/use_named_skins": true
 }
-
-[display]
-
-window/size/viewport_width=1280
-window/size/viewport_height=720
-window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
 
 [input]
 

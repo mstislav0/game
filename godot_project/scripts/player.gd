@@ -43,11 +43,18 @@ func _unhandled_input(event: InputEvent) -> void:
 		rotation.y -= event.relative.x * MOUSE_SENSITIVITY
 		_cam_pitch -= event.relative.y * MOUSE_SENSITIVITY
 		_cam_pitch = clamp(_cam_pitch, PITCH_MIN, PITCH_MAX)
-	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
-		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		else:
-			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	if event is InputEventKey and event.pressed:
+		if event.keycode == KEY_ESCAPE:
+			if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			else:
+				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		elif event.keycode == KEY_F11:
+			var w := get_window()
+			if w.mode == Window.MODE_FULLSCREEN:
+				w.mode = Window.MODE_MAXIMIZED
+			else:
+				w.mode = Window.MODE_FULLSCREEN
 
 func _create_name_label() -> void:
 	_label = Label3D.new()

@@ -1,29 +1,23 @@
-[gd_scene load_steps=4 format=3 uid="uid://collectible"]
+[gd_scene load_steps=3 format=3 uid="uid://collectible"]
 
 [ext_resource type="Script" path="res://scripts/collectible.gd" id="1"]
 [ext_resource type="PackedScene" path="res://assets/kenney_space/barrels.glb" id="2_model"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
-size = Vector3(1.6, 1.4, 1.6)
-
-[sub_resource type="OmniLight3D" id="GlowLight"]
-light_color = Color(1, 0.85, 0.4, 1)
-light_energy = 1.5
-omni_range = 3.0
+size = Vector3(1.2, 1.2, 1.2)
 
 [node name="Collectible" type="Area3D" groups=["interactable"]]
 script = ExtResource("1")
 quest_id = "earth_tools"
 
 [node name="Model" parent="." instance=ExtResource("2_model")]
-transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-position = Vector3(0, 0.7, 0)
+position = Vector3(0, 0.5, 0)
 shape = SubResource("BoxShape3D_1")
 
 [node name="Glow" type="OmniLight3D" parent="."]
-position = Vector3(0, 1.2, 0)
-light_color = SubResource("GlowLight").light_color
+position = Vector3(0, 1.0, 0)
+light_color = Color(1, 0.85, 0.4, 1)
 light_energy = 1.5
 omni_range = 3.0

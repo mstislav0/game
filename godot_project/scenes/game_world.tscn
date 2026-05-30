@@ -195,6 +195,7 @@ text = "WASD — движение
 Мышь — камера
 Пробел — прыжок
 E — взаимодействие
+F11 — полный экран
 ESC — освободить курсор"
 theme_override_font_sizes/font_size = 18
 modulate = Color(0.8, 0.8, 0.8, 0.9)
