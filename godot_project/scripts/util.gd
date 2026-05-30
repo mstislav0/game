@@ -27,8 +27,11 @@ func center_model_xz(target: Node3D) -> void:
 		return  # ничего не нашли
 
 	var center := aabb.position + aabb.size * 0.5
-	# Сдвигаем target, чтобы центр меша оказался в (0, _, 0) родителя
-	target.position -= Vector3(center.x, 0, center.z)
+	# Сдвигаем target, чтобы центр меша оказался в (0, _, 0) родителя.
+	# Координаты центра — в локальном пространстве target (без его scale),
+	# поэтому домножаем на scale, чтобы получить смещение в координатах родителя.
+	var s := target.scale
+	target.position -= Vector3(center.x * s.x, 0, center.z * s.z)
 
 func _find_visual_instances(node: Node) -> Array:
 	var result: Array = []
