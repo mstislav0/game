@@ -15,6 +15,9 @@ var _quest_given := false
 func _ready() -> void:
 	prompt_text = "[E] Поговорить с %s" % npc_name
 	interacted.connect(_on_interacted)
+	var label = get_node_or_null("NameLabel")
+	if label:
+		label.text = npc_name
 
 func _on_interacted(_player: Node) -> void:
 	var line: String

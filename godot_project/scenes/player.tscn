@@ -1,21 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://player"]
+[gd_scene load_steps=8 format=3 uid="uid://player"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1"]
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_1"]
-radius = 0.4
-height = 1.8
+[ext_resource type="PackedScene" path="res://assets/kenney_space/astronautA.glb" id="2_astronaut"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
 radius = 0.4
 height = 1.8
-
-[sub_resource type="StandardMaterial3D" id="Mat_Body"]
-albedo_color = Color(0.3, 0.6, 1.0, 1)
-
-[sub_resource type="SphereMesh" id="SphereMesh_Head"]
-radius = 0.18
-height = 0.36
 
 [sub_resource type="StandardMaterial3D" id="Mat_Face"]
 albedo_color = Color(1, 0.9, 0.4, 1)
@@ -23,11 +13,8 @@ emission_enabled = true
 emission = Color(1, 0.9, 0.4, 1)
 emission_energy_multiplier = 0.6
 
-[sub_resource type="BoxMesh" id="BoxMesh_Chest"]
-size = Vector3(0.6, 0.4, 0.1)
-
 [sub_resource type="BoxMesh" id="BoxMesh_Backpack"]
-size = Vector3(0.7, 0.7, 0.35)
+size = Vector3(0.6, 0.6, 0.3)
 
 [sub_resource type="StandardMaterial3D" id="Mat_Backpack"]
 albedo_color = Color(1.0, 0.35, 0.1, 1)
@@ -41,40 +28,28 @@ size = Vector3(0.7, 0.05, 0.9)
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-position = Vector3(0, 0.9, 0)
-mesh = SubResource("CapsuleMesh_1")
-surface_material_override/0 = SubResource("Mat_Body")
-
-[node name="Face" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -0.42)
-mesh = SubResource("SphereMesh_Head")
-surface_material_override/0 = SubResource("Mat_Face")
-
-[node name="Chest" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, -0.42)
-mesh = SubResource("BoxMesh_Chest")
-surface_material_override/0 = SubResource("Mat_Face")
-
-[node name="Backpack" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.45)
-mesh = SubResource("BoxMesh_Backpack")
-surface_material_override/0 = SubResource("Mat_Backpack")
-
-[node name="DirectionArrow" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.06, -0.55)
-mesh = SubResource("PrismMesh_Arrow")
-surface_material_override/0 = SubResource("Mat_Face")
+[node name="Astronaut" parent="." instance=ExtResource("2_astronaut")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 position = Vector3(0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_1")
 
+[node name="Backpack" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0.4)
+mesh = SubResource("BoxMesh_Backpack")
+surface_material_override/0 = SubResource("Mat_Backpack")
+
+[node name="DirectionArrow" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.06, -0.7)
+mesh = SubResource("PrismMesh_Arrow")
+surface_material_override/0 = SubResource("Mat_Face")
+
 [node name="CameraPivot" type="Node3D" parent="."]
 position = Vector3(0, 1.5, 0)
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot"]
-position = Vector3(0, 1.5, 5.0)
+position = Vector3(0, 1.5, 5.5)
 rotation_degrees = Vector3(-10, 0, 0)
 current = false
 fov = 70.0

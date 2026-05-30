@@ -11,6 +11,8 @@ web_build/
 # Node
 server/node_modules/
 server/npm-debug.log*
+server/server.log
+server/*.log
 
 # macOS
 .DS_Store

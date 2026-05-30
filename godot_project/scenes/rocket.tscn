@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://rocket_big"]
+
+[ext_resource type="PackedScene" path="res://assets/kenney_space/rocket_baseA.glb" id="1_base"]
+[ext_resource type="PackedScene" path="res://assets/kenney_space/rocket_fuelA.glb" id="2_fuel"]
+[ext_resource type="PackedScene" path="res://assets/kenney_space/rocket_sidesA.glb" id="3_sides"]
+[ext_resource type="PackedScene" path="res://assets/kenney_space/rocket_finsA.glb" id="4_fins"]
+
+[node name="Rocket" type="Node3D"]
+
+[node name="Fins" parent="." instance=ExtResource("4_fins")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0)
+
+[node name="Base" parent="." instance=ExtResource("1_base")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 1.4, 0)
+
+[node name="Sides" parent="." instance=ExtResource("3_sides")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 4.5, 0)
+
+[node name="Fuel" parent="." instance=ExtResource("2_fuel")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 8.5, 0)

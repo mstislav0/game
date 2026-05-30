@@ -1,6 +1,6 @@
 extends Interactable
 
-@export var quest_id: String = "earth_tools"
+@export var required_quests: Array[String] = ["earth_tools", "earth_fuel", "earth_antenna"]
 var _voted := false
 
 func _ready() -> void:
@@ -12,9 +12,10 @@ func _ready() -> void:
 func _on_interacted(_player: Node) -> void:
 	if _voted:
 		return
-	if not QuestManager.is_quest_complete(quest_id):
-		QuestManager.emit_signal("journal_message", "Сначала соберите все 3 инструмента!")
-		return
+	for qid in required_quests:
+		if not QuestManager.is_quest_complete(qid):
+			QuestManager.emit_signal("journal_message", "Ещё не всё готово! Соберите инструменты, топливо и активируйте антенну.")
+			return
 	_voted = true
 	NetworkManager.send_launch_vote()
 	QuestManager.emit_signal("journal_message", "Вы готовы к запуску. Ждём остальных...")

@@ -63,7 +63,7 @@ func _play_launch_animation() -> void:
 
 func _spawn_launch_smoke() -> void:
 	var smoke = preload("res://scenes/launch_smoke.tscn").instantiate()
-	smoke.position = rocket.position - Vector3(0, 4, 0)
+	smoke.position = Vector3(rocket.position.x, 0.5, rocket.position.z)
 	add_child(smoke)
 
 func _shake_camera(cam: Camera3D, duration: float) -> void:
