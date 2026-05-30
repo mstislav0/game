@@ -18,7 +18,6 @@ func _ready() -> void:
 	var label = get_node_or_null("NameLabel")
 	if label:
 		label.text = npc_name
-	VertexColorFix.apply(self)
 
 func _on_interacted(_player: Node) -> void:
 	var line: String

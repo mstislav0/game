@@ -20,15 +20,33 @@ func _ready() -> void:
 	NetworkManager.player_moved.connect(_on_player_moved)
 	NetworkManager.launch_now.connect(_play_launch_animation)
 
-	# Чиним материалы для Kenney-моделей (vertex colors)
-	VertexColorFix.apply(self)
-
-	# Спаунимся сами
+	# Спаунимся сами ПЕРВЫМ ДЕЛОМ — чтобы любая последующая ошибка не лишила нас камеры
 	_spawn_local_player()
 
 	# Спауним всех остальных игроков комнаты, известных на этот момент
 	for pid in NetworkManager.room_players.keys():
 		_on_player_joined(pid, NetworkManager.room_players[pid])
+
+	# Чиним материалы Kenney-моделей (вызов в конце и в отдельном фрейме)
+	call_deferred("_fix_vertex_colors", self)
+
+func _fix_vertex_colors(node: Node) -> void:
+	if node is MeshInstance3D:
+		var mi: MeshInstance3D = node
+		var mesh: Mesh = mi.mesh
+		if mesh:
+			for i in mesh.get_surface_count():
+				var fmt := mesh.surface_get_format(i)
+				if (fmt & Mesh.ARRAY_FORMAT_COLOR) == 0:
+					continue
+				var mat = mesh.surface_get_material(i)
+				if mat is StandardMaterial3D and not mat.vertex_color_use_as_albedo:
+					mat.vertex_color_use_as_albedo = true
+				var ov = mi.get_surface_override_material(i)
+				if ov is StandardMaterial3D and not ov.vertex_color_use_as_albedo:
+					ov.vertex_color_use_as_albedo = true
+	for child in node.get_children():
+		_fix_vertex_colors(child)
 
 func _play_launch_animation() -> void:
 	# Запрашиваем у HUD кат-сцену (отсчёт + fade)
