@@ -20,6 +20,9 @@ func _ready() -> void:
 	NetworkManager.player_moved.connect(_on_player_moved)
 	NetworkManager.launch_now.connect(_play_launch_animation)
 
+	# Чиним материалы для Kenney-моделей (vertex colors)
+	VertexColorFix.apply(self)
+
 	# Спаунимся сами
 	_spawn_local_player()
 

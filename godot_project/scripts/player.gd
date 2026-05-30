@@ -34,6 +34,7 @@ func _ready() -> void:
 	else:
 		if camera:
 			camera.current = false
+	VertexColorFix.apply(self)
 	_create_name_label()
 
 func _unhandled_input(event: InputEvent) -> void:
