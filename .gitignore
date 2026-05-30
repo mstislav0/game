@@ -4,6 +4,9 @@ godot_project/.import/
 godot_project/export.cfg
 godot_project/export_presets.cfg
 *.translation
+# Per-machine import descriptors — Godot regenerates them on first import
+*.import
+*.uid
 
 # Web build output
 web_build/
