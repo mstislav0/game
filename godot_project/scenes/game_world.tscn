@@ -33,18 +33,18 @@ roughness = 1.0
 background_mode = 1
 background_color = Color(0.55, 0.7, 0.95, 1)
 ambient_light_source = 2
-ambient_light_color = Color(0.6, 0.65, 0.8, 1)
-ambient_light_energy = 0.55
+ambient_light_color = Color(0.75, 0.78, 0.9, 1)
+ambient_light_energy = 1.1
 ssao_enabled = true
 ssao_radius = 1.5
-ssao_intensity = 2.5
+ssao_intensity = 1.8
 glow_enabled = true
 glow_intensity = 0.7
 glow_strength = 1.1
 glow_bloom = 0.15
 fog_enabled = true
 fog_light_color = Color(0.7, 0.8, 0.95, 1)
-fog_density = 0.006
+fog_density = 0.005
 
 [node name="GameWorld" type="Node3D"]
 script = ExtResource("1")
@@ -55,8 +55,15 @@ environment = SubResource("Env_1")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.866, -0.433, 0.25, 0, 0.5, 0.866, -0.5, -0.75, 0.433, 0, 30, 0)
 light_color = Color(1, 0.95, 0.85, 1)
-light_energy = 1.7
+light_energy = 1.3
 shadow_enabled = true
+shadow_opacity = 0.7
+
+[node name="FillLight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866, -0.25, -0.433, 0, 0.866, -0.5, 0.5, -0.433, -0.75, 0, 20, 0)
+light_color = Color(0.7, 0.8, 1, 1)
+light_energy = 0.5
+shadow_enabled = false
 
 [node name="Ground" type="StaticBody3D" parent="."]
 
@@ -69,22 +76,22 @@ position = Vector3(0, -0.1, 0)
 shape = SubResource("BoxShape3D_1")
 
 [node name="Rocket" parent="." instance=ExtResource("6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -28)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -60)
 
 [node name="GantryA" parent="." instance=ExtResource("17")]
-transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, -6, 0, -22)
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -22, 0, -48)
 
 [node name="GantryB" parent="." instance=ExtResource("17")]
-transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 6, 0, -22)
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 22, 0, -48)
 
 [node name="GantryC" parent="." instance=ExtResource("17")]
-transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, -6, 0, -34)
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -22, 0, -72)
 
 [node name="GantryD" parent="." instance=ExtResource("17")]
-transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 6, 0, -34)
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 22, 0, -72)
 
 [node name="LaunchZone" parent="." instance=ExtResource("5")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -16)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -30)
 
 [node name="HangarLarge" parent="." instance=ExtResource("9")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -28, 0, 10)

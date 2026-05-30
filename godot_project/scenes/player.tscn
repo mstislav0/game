@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://player"]
+[gd_scene load_steps=3 format=3 uid="uid://player"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1"]
 [ext_resource type="PackedScene" path="res://assets/kenney_space/astronautA.glb" id="2_astronaut"]
@@ -6,15 +6,6 @@
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
 radius = 0.35
 height = 1.7
-
-[sub_resource type="StandardMaterial3D" id="Mat_Arrow"]
-albedo_color = Color(1, 0.9, 0.4, 1)
-emission_enabled = true
-emission = Color(1, 0.9, 0.4, 1)
-emission_energy_multiplier = 0.6
-
-[sub_resource type="PrismMesh" id="PrismMesh_Arrow"]
-size = Vector3(0.6, 0.04, 0.9)
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1")
@@ -25,11 +16,6 @@ transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, 0, 0, 0)
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 position = Vector3(0, 0.85, 0)
 shape = SubResource("CapsuleShape3D_1")
-
-[node name="DirectionArrow" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.05, -0.7)
-mesh = SubResource("PrismMesh_Arrow")
-surface_material_override/0 = SubResource("Mat_Arrow")
 
 [node name="CameraPivot" type="Node3D" parent="."]
 position = Vector3(0, 1.6, 0)

@@ -27,6 +27,26 @@ func _ready() -> void:
 	for pid in NetworkManager.room_players.keys():
 		_on_player_joined(pid, NetworkManager.room_players[pid])
 
+	# Автоматически добавляем коллизии всем статичным объектам сценерии,
+	# чтобы игрок не проходил сквозь стены ангаров, ракету, скалы и т.п.
+	for nm in [
+		"Rocket", "HangarLarge", "HangarSmall", "HangarSmall2",
+		"Generator", "Speeder", "Cargo",
+		"RockA1", "RockA2", "RockB1", "RockB2",
+		"SmallRock1", "SmallRock2", "SmallRock3",
+		"GantryA", "GantryB", "GantryC", "GantryD",
+	]:
+		var n = get_node_or_null(nm)
+		if n:
+			_build_collisions_for(n)
+
+func _build_collisions_for(root: Node) -> void:
+	for child in root.get_children():
+		if child is MeshInstance3D and child.mesh != null:
+			child.create_trimesh_collision()
+		else:
+			_build_collisions_for(child)
+
 func _play_launch_animation() -> void:
 	# Запрашиваем у HUD кат-сцену (отсчёт + fade)
 	var hud = get_node_or_null("HUD")

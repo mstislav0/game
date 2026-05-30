@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" path="res://assets/kenney_space/rocket_finsA.glb" id="4_fins"]
 
 [node name="Rocket" type="Node3D"]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
+transform = Transform3D(15, 0, 0, 0, 15, 0, 0, 0, 15, 0, 0, 0)
 
 [node name="Fins" parent="." instance=ExtResource("4_fins")]
 
