@@ -23,6 +23,5 @@ func _on_launch_progress(have: int, required: int) -> void:
 	QuestManager.emit_signal("journal_message", "К запуску готовы: %d/%d" % [have, required])
 
 func _on_launch_now() -> void:
+	# Сцену меняет game_world после анимации
 	QuestManager.emit_signal("journal_message", "🚀 Запуск!")
-	await get_tree().create_timer(1.5).timeout
-	get_tree().change_scene_to_file("res://scenes/space.tscn")

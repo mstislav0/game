@@ -46,3 +46,23 @@ func _add_journal_line(text: String) -> void:
 
 func _on_quest_completed(_quest_id: String) -> void:
 	pass
+
+func play_launch_cutscene() -> void:
+	var overlay = $LaunchOverlay
+	var countdown = $LaunchOverlay/Countdown
+	var fade = $LaunchOverlay/Fade
+	overlay.show()
+	fade.color = Color(0, 0, 0, 0)
+
+	for n in ["3", "2", "1", "ПОЕХАЛИ!"]:
+		countdown.text = n
+		countdown.modulate = Color(1, 0.9, 0.4, 0)
+		var t = create_tween()
+		t.tween_property(countdown, "modulate:a", 1.0, 0.2)
+		t.tween_interval(0.5)
+		t.tween_property(countdown, "modulate:a", 0.0, 0.2)
+		await t.finished
+
+	# Затемнение
+	var fadeTween = create_tween()
+	fadeTween.tween_property(fade, "color:a", 1.0, 3.5)
