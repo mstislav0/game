@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" path="res://assets/quaternius_scifi/Prop_HealthPack_Tube.gltf" id="11_tube"]
 [ext_resource type="PackedScene" path="res://assets/quaternius_scifi/Prop_Mug.gltf" id="12_mug"]
 [ext_resource type="PackedScene" path="res://assets/quaternius_scifi/Prop_SatelliteDish.gltf" id="13_dish"]
+[ext_resource type="PackedScene" uid="uid://ladder_visual" path="res://scenes/ladder_visual.tscn" id="14_ladder"]
 
 [sub_resource type="StandardMaterial3D" id="FloorMat"]
 albedo_color = Color(0.3, 0.34, 0.4, 1)
@@ -50,10 +51,8 @@ radial_segments = 8
 ; ============================================================
 ; ВЕРТИКАЛЬНАЯ ЛЕСТНИЦА (общая для всех этажей)
 ; ============================================================
-[node name="LadderPole" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 6, 0)
-mesh = SubResource("LadderPoleMesh")
-surface_material_override/0 = SubResource("LadderMat")
+[node name="LadderVisual" parent="." instance=ExtResource("14_ladder")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, 0)
 
 ; ============================================================
 ; ЭТАЖ 1 — НИЖНИЙ (Y=0) — игрок сюда телепортируется

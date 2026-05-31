@@ -1,0 +1,147 @@
+[gd_scene load_steps=5 format=3 uid="uid://ladder_visual"]
+
+[sub_resource type="StandardMaterial3D" id="RailMat"]
+albedo_color = Color(0.85, 0.65, 0.2, 1)
+metallic = 0.9
+roughness = 0.25
+
+[sub_resource type="StandardMaterial3D" id="RungMat"]
+albedo_color = Color(0.7, 0.55, 0.18, 1)
+metallic = 0.85
+roughness = 0.3
+
+[sub_resource type="CylinderMesh" id="RailMesh"]
+top_radius = 0.06
+bottom_radius = 0.06
+height = 12.0
+radial_segments = 8
+
+[sub_resource type="BoxMesh" id="RungMesh"]
+size = Vector3(0.7, 0.06, 0.08)
+
+[node name="LadderVisual" type="Node3D"]
+
+[node name="RailLeft" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 6, 0)
+mesh = SubResource("RailMesh")
+surface_material_override/0 = SubResource("RailMat")
+
+[node name="RailRight" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 6, 0)
+mesh = SubResource("RailMesh")
+surface_material_override/0 = SubResource("RailMat")
+
+[node name="Rung01" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung02" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung03" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung04" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung05" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung06" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.0, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung07" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung08" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.0, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung09" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung10" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.0, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung11" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.5, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung12" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.0, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung13" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung14" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.0, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung15" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.5, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung16" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.0, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung17" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.5, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung18" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.0, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung19" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.5, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung20" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10.0, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung21" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10.5, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung22" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.0, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
+
+[node name="Rung23" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.5, 0)
+mesh = SubResource("RungMesh")
+surface_material_override/0 = SubResource("RungMat")
