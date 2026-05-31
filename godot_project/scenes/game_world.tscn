@@ -20,6 +20,10 @@
 [ext_resource type="PackedScene" path="res://assets/kenney_space/pipe_supportHigh.glb" id="17"]
 [ext_resource type="PackedScene" path="res://assets/kenney_space/machine_generator.glb" id="18"]
 [ext_resource type="Script" path="res://scripts/grass_scatter.gd" id="19"]
+[ext_resource type="Texture2D" path="res://assets/textures/paving_stones/color.jpg" id="20_tex_color"]
+[ext_resource type="Texture2D" path="res://assets/textures/paving_stones/normal.jpg" id="21_tex_normal"]
+[ext_resource type="Texture2D" path="res://assets/textures/paving_stones/roughness.jpg" id="22_tex_rough"]
+[ext_resource type="Texture2D" path="res://assets/textures/paving_stones/ao.jpg" id="23_tex_ao"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1"]
 size = Vector2(160, 160)
@@ -28,8 +32,16 @@ size = Vector2(160, 160)
 size = Vector3(160, 0.2, 160)
 
 [sub_resource type="StandardMaterial3D" id="GroundMat"]
-albedo_color = Color(0.32, 0.45, 0.22, 1)
-roughness = 1.0
+albedo_texture = ExtResource("20_tex_color")
+roughness_texture = ExtResource("22_tex_rough")
+normal_enabled = true
+normal_texture = ExtResource("21_tex_normal")
+normal_scale = 1.2
+ao_enabled = true
+ao_texture = ExtResource("23_tex_ao")
+ao_light_affect = 0.9
+uv1_scale = Vector3(40, 40, 1)
+texture_filter = 3
 
 [sub_resource type="Environment" id="Env_1"]
 background_mode = 1
