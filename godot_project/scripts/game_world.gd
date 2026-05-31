@@ -30,7 +30,7 @@ func _ready() -> void:
 	# Автоматически добавляем коллизии всем статичным объектам сценерии,
 	# чтобы игрок не проходил сквозь стены ангаров, ракету, скалы и т.п.
 	for nm in [
-		"Rocket", "HangarLarge", "HangarSmall", "HangarSmall2",
+		"HangarLarge", "HangarSmall", "HangarSmall2",
 		"Generator", "Speeder", "Cargo",
 		"RockA1", "RockA2", "RockB1", "RockB2",
 		"SmallRock1", "SmallRock2", "SmallRock3",
