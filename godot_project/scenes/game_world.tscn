@@ -8,6 +8,9 @@
 [ext_resource type="Texture2D" path="res://assets/textures/paving_stones/roughness.jpg" id="22_tex_rough"]
 [ext_resource type="Texture2D" path="res://assets/textures/paving_stones/ao.jpg" id="23_tex_ao"]
 [ext_resource type="PackedScene" uid="uid://house" path="res://scenes/house.tscn" id="24_house"]
+[ext_resource type="PackedScene" uid="uid://house_small" path="res://scenes/house_small.tscn" id="25_house_s"]
+[ext_resource type="PackedScene" uid="uid://house_large" path="res://scenes/house_large.tscn" id="26_house_l"]
+[ext_resource type="PackedScene" uid="uid://house_tower" path="res://scenes/house_tower.tscn" id="27_house_t"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1"]
 size = Vector2(160, 160)
@@ -252,3 +255,21 @@ transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 25, 0, 20)
 
 [node name="House5" parent="." instance=ExtResource("24_house")]
 transform = Transform3D(0.866, 0, -0.5, 0, 1, 0, 0.5, 0, 0.866, 0, 0, -32)
+
+[node name="HouseSmall1" parent="." instance=ExtResource("25_house_s")]
+transform = Transform3D(0.866, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866, -38, 0, 0)
+
+[node name="HouseSmall2" parent="." instance=ExtResource("25_house_s")]
+transform = Transform3D(0.707, 0, -0.707, 0, 1, 0, 0.707, 0, 0.707, 38, 0, -5)
+
+[node name="HouseLarge1" parent="." instance=ExtResource("26_house_l")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 38)
+
+[node name="HouseLarge2" parent="." instance=ExtResource("26_house_l")]
+transform = Transform3D(-0.866, 0, -0.5, 0, 1, 0, 0.5, 0, -0.866, -45, 0, -35)
+
+[node name="HouseTower1" parent="." instance=ExtResource("27_house_t")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0, 35)
+
+[node name="HouseTower2" parent="." instance=ExtResource("27_house_t")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 12, 0, -42)
