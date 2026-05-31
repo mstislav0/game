@@ -25,6 +25,7 @@
 [ext_resource type="PackedScene" path="res://assets/quaternius_scifi/Prop_Syringe.gltf" id="24_syringe"]
 [ext_resource type="PackedScene" path="res://assets/quaternius_scifi/Prop_Shelves_ThinShort.gltf" id="25_shelf_thin"]
 [ext_resource type="PackedScene" path="res://assets/quaternius_scifi/Prop_Chest.gltf" id="26_chest"]
+[ext_resource type="Script" path="res://scripts/room_wall.gd" id="27_wall"]
 
 [sub_resource type="CylinderMesh" id="FloorMesh"]
 top_radius = 6.0
@@ -206,3 +207,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 9.0, -4)
 
 [node name="F3_ShelfThin" parent="." instance=ExtResource("25_shelf_thin")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 8.15, 3)
+
+[node name="F1_Wall" type="StaticBody3D" parent="."]
+script = ExtResource("27_wall")
+
+[node name="F2_Wall" type="StaticBody3D" parent="."]
+script = ExtResource("27_wall")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+
+[node name="F3_Wall" type="StaticBody3D" parent="."]
+script = ExtResource("27_wall")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 0)
