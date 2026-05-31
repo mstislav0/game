@@ -1,24 +1,7 @@
-[gd_scene load_steps=22 format=3 uid="uid://game_world"]
+[gd_scene load_steps=11 format=3 uid="uid://game_world"]
 
 [ext_resource type="Script" path="res://scripts/game_world.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/hud.gd" id="2"]
-[ext_resource type="PackedScene" uid="uid://collectible" path="res://scenes/collectible.tscn" id="3"]
-[ext_resource type="PackedScene" uid="uid://npc" path="res://scenes/npc.tscn" id="4"]
-[ext_resource type="PackedScene" uid="uid://entrance" path="res://scenes/entrance.tscn" id="5"]
-[ext_resource type="PackedScene" uid="uid://cockpit" path="res://scenes/cockpit.tscn" id="20"]
-[ext_resource type="PackedScene" uid="uid://rocket_big" path="res://scenes/rocket.tscn" id="6"]
-[ext_resource type="PackedScene" uid="uid://fuel_barrel" path="res://scenes/fuel_barrel.tscn" id="7"]
-[ext_resource type="PackedScene" uid="uid://antenna" path="res://scenes/antenna.tscn" id="8"]
-[ext_resource type="PackedScene" path="res://assets/kenney_space/hangar_largeA.glb" id="9"]
-[ext_resource type="PackedScene" path="res://assets/kenney_space/hangar_smallA.glb" id="10"]
-[ext_resource type="PackedScene" path="res://assets/kenney_space/craft_speederA.glb" id="11"]
-[ext_resource type="PackedScene" path="res://assets/kenney_space/craft_cargoA.glb" id="12"]
-[ext_resource type="PackedScene" path="res://assets/kenney_space/rock_largeA.glb" id="13"]
-[ext_resource type="PackedScene" path="res://assets/kenney_space/rock_largeB.glb" id="14"]
-[ext_resource type="PackedScene" path="res://assets/kenney_space/rock.glb" id="15"]
-[ext_resource type="PackedScene" path="res://assets/kenney_space/crater.glb" id="16"]
-[ext_resource type="PackedScene" path="res://assets/kenney_space/pipe_supportHigh.glb" id="17"]
-[ext_resource type="PackedScene" path="res://assets/kenney_space/machine_generator.glb" id="18"]
 [ext_resource type="Script" path="res://scripts/grass_scatter.gd" id="19"]
 [ext_resource type="Texture2D" path="res://assets/textures/paving_stones/color.jpg" id="20_tex_color"]
 [ext_resource type="Texture2D" path="res://assets/textures/paving_stones/normal.jpg" id="21_tex_normal"]
@@ -43,22 +26,37 @@ ao_light_affect = 0.9
 uv1_scale = Vector3(40, 40, 1)
 texture_filter = 3
 
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.12, 0.32, 0.65, 1)
+sky_horizon_color = Color(0.7, 0.78, 0.88, 1)
+sky_curve = 0.18
+sky_energy_multiplier = 1.2
+ground_bottom_color = Color(0.18, 0.22, 0.28, 1)
+ground_horizon_color = Color(0.55, 0.55, 0.55, 1)
+sun_angle_max = 12.0
+sun_curve = 0.2
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("SkyMat")
+radiance_size = 4
+
 [sub_resource type="Environment" id="Env_1"]
-background_mode = 1
-background_color = Color(0.55, 0.7, 0.95, 1)
-ambient_light_source = 2
+background_mode = 2
+sky = SubResource("Sky_1")
+ambient_light_source = 3
 ambient_light_color = Color(0.75, 0.78, 0.9, 1)
-ambient_light_energy = 1.1
+ambient_light_energy = 1.0
 ssao_enabled = true
 ssao_radius = 1.5
 ssao_intensity = 1.8
 glow_enabled = true
-glow_intensity = 0.7
-glow_strength = 1.1
-glow_bloom = 0.15
+glow_intensity = 1.0
+glow_strength = 1.2
+glow_bloom = 0.25
+glow_hdr_threshold = 0.95
 fog_enabled = true
 fog_light_color = Color(0.7, 0.8, 0.95, 1)
-fog_density = 0.005
+fog_density = 0.003
 
 [node name="GameWorld" type="Node3D"]
 script = ExtResource("1")
@@ -66,17 +64,19 @@ script = ExtResource("1")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Env_1")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="Sun" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.866, -0.433, 0.25, 0, 0.5, 0.866, -0.5, -0.75, 0.433, 0, 30, 0)
-light_color = Color(1, 0.95, 0.85, 1)
-light_energy = 1.3
+light_color = Color(1, 0.93, 0.78, 1)
+light_energy = 1.6
 shadow_enabled = true
-shadow_opacity = 0.7
+shadow_opacity = 0.75
+directional_shadow_max_distance = 200.0
+sky_mode = 1
 
 [node name="FillLight" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.866, -0.25, -0.433, 0, 0.866, -0.5, 0.5, -0.433, -0.75, 0, 20, 0)
-light_color = Color(0.7, 0.8, 1, 1)
-light_energy = 0.5
+light_color = Color(0.6, 0.75, 1, 1)
+light_energy = 0.55
 shadow_enabled = false
 
 [node name="Grass" type="MultiMeshInstance3D" parent="."]
@@ -95,110 +95,6 @@ surface_material_override/0 = SubResource("GroundMat")
 position = Vector3(0, -0.1, 0)
 shape = SubResource("BoxShape3D_1")
 
-[node name="Rocket" parent="." instance=ExtResource("6")]
-transform = Transform3D(15, 0, 0, 0, 15, 0, 0, 0, 15, 0, 0, -60)
-
-[node name="GantryA" parent="." instance=ExtResource("17")]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -22, 0, -48)
-
-[node name="GantryB" parent="." instance=ExtResource("17")]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 22, 0, -48)
-
-[node name="GantryC" parent="." instance=ExtResource("17")]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -22, 0, -72)
-
-[node name="GantryD" parent="." instance=ExtResource("17")]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 22, 0, -72)
-
-[node name="Entrance" parent="." instance=ExtResource("5")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -45)
-
-[node name="Cockpit" parent="." instance=ExtResource("20")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 29, -60)
-
-[node name="HangarLarge" parent="." instance=ExtResource("9")]
-transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -28, 0, 10)
-
-[node name="HangarSmall" parent="." instance=ExtResource("10")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 25, 0, 5)
-
-[node name="HangarSmall2" parent="." instance=ExtResource("10")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 28, 0, -10)
-
-[node name="Generator" parent="." instance=ExtResource("18")]
-transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, -20, 0, -5)
-
-[node name="Speeder" parent="." instance=ExtResource("11")]
-transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 15, 0.5, 12)
-
-[node name="Cargo" parent="." instance=ExtResource("12")]
-transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, -35, 0.5, 20)
-
-[node name="Antenna" parent="." instance=ExtResource("8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, -25)
-
-[node name="Crater1" parent="." instance=ExtResource("16")]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -40, 0, -30)
-
-[node name="Crater2" parent="." instance=ExtResource("16")]
-transform = Transform3D(3.5, 0, 0, 0, 3.5, 0, 0, 0, 3.5, 35, 0, -35)
-
-[node name="RockA1" parent="." instance=ExtResource("13")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -50, 0, -10)
-
-[node name="RockA2" parent="." instance=ExtResource("13")]
-transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 45, 0, 25)
-
-[node name="RockB1" parent="." instance=ExtResource("14")]
-transform = Transform3D(3.5, 0, 0, 0, 3.5, 0, 0, 0, 3.5, -45, 0, 30)
-
-[node name="RockB2" parent="." instance=ExtResource("14")]
-transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 38, 0, -45)
-
-[node name="SmallRock1" parent="." instance=ExtResource("15")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -8, 0, 20)
-
-[node name="SmallRock2" parent="." instance=ExtResource("15")]
-transform = Transform3D(1.7, 0, 0, 0, 1.7, 0, 0, 0, 1.7, 12, 0, -8)
-
-[node name="SmallRock3" parent="." instance=ExtResource("15")]
-transform = Transform3D(2.3, 0, 0, 0, 2.3, 0, 0, 0, 2.3, -22, 0, 25)
-
-[node name="Professor" parent="." instance=ExtResource("4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6)
-npc_name = "Профессор Звёздочкин"
-intro_line = "Привет! Нам нужно 3 ящика с инструментами — поищи по космодрому."
-quest_id = "earth_tools"
-quest_title = "Найти ящики с инструментами"
-quest_target = 3
-
-[node name="Mechanic" parent="." instance=ExtResource("4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 0, 8)
-npc_name = "Механик Гайка"
-intro_line = "Без топлива ракета не полетит! Нужно 3 топливные бочки — их раскидало после прошлого запуска."
-progress_line = "Молодец, ищи ещё бочки!"
-complete_line = "Все три бочки в баках. Готовы к взлёту!"
-quest_id = "earth_fuel"
-quest_title = "Собрать топливные бочки"
-quest_target = 3
-
-[node name="Tool1" parent="." instance=ExtResource("3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 0, 14)
-
-[node name="Tool2" parent="." instance=ExtResource("3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 18)
-
-[node name="Tool3" parent="." instance=ExtResource("3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 0, -18)
-
-[node name="Fuel1" parent="." instance=ExtResource("7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 22)
-
-[node name="Fuel2" parent="." instance=ExtResource("7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38, 0, 4)
-
-[node name="Fuel3" parent="." instance=ExtResource("7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 0, -20)
 
 [node name="HUD" type="CanvasLayer" parent="."]
 script = ExtResource("2")
