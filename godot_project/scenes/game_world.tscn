@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" path="res://assets/textures/paving_stones/normal.jpg" id="21_tex_normal"]
 [ext_resource type="Texture2D" path="res://assets/textures/paving_stones/roughness.jpg" id="22_tex_rough"]
 [ext_resource type="Texture2D" path="res://assets/textures/paving_stones/ao.jpg" id="23_tex_ao"]
+[ext_resource type="PackedScene" uid="uid://house" path="res://scenes/house.tscn" id="24_house"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1"]
 size = Vector2(160, 160)
@@ -236,3 +237,18 @@ theme_override_font_sizes/font_size = 140
 theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 12
+
+[node name="House1" parent="." instance=ExtResource("24_house")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 0, -15)
+
+[node name="House2" parent="." instance=ExtResource("24_house")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 22, 0, -18)
+
+[node name="House3" parent="." instance=ExtResource("24_house")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -25, 0, 18)
+
+[node name="House4" parent="." instance=ExtResource("24_house")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 25, 0, 20)
+
+[node name="House5" parent="." instance=ExtResource("24_house")]
+transform = Transform3D(0.866, 0, -0.5, 0, 1, 0, 0.5, 0, 0.866, 0, 0, -32)
