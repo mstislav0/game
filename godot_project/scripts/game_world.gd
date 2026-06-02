@@ -27,6 +27,12 @@ func _ready() -> void:
 	for pid in NetworkManager.room_players.keys():
 		_on_player_joined(pid, NetworkManager.room_players[pid])
 
+	# Коллизии для ракеты и стартовых ферм (чтобы не проходить сквозь них)
+	for nm in ["Rocket", "GantryA", "GantryB", "GantryC", "GantryD"]:
+		var n = get_node_or_null(nm)
+		if n:
+			_build_collisions_for(n)
+
 func _build_collisions_for(root: Node) -> void:
 	for child in root.get_children():
 		if child is MeshInstance3D and child.mesh != null:

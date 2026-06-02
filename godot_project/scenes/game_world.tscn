@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://game_world"]
+[gd_scene load_steps=30 format=3 uid="uid://game_world"]
 
 [ext_resource type="Script" path="res://scripts/game_world.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/hud.gd" id="2"]
@@ -11,6 +11,17 @@
 [ext_resource type="PackedScene" uid="uid://house_small" path="res://scenes/house_small.tscn" id="25_house_s"]
 [ext_resource type="PackedScene" uid="uid://house_large" path="res://scenes/house_large.tscn" id="26_house_l"]
 [ext_resource type="PackedScene" uid="uid://house_tower" path="res://scenes/house_tower.tscn" id="27_house_t"]
+[ext_resource type="PackedScene" path="res://scenes/rocket.tscn" id="30_rocket"]
+[ext_resource type="PackedScene" path="res://scenes/entrance.tscn" id="31_entrance"]
+[ext_resource type="PackedScene" path="res://scenes/cockpit.tscn" id="32_cockpit"]
+[ext_resource type="PackedScene" path="res://scenes/npc.tscn" id="33_npc"]
+[ext_resource type="PackedScene" path="res://scenes/collectible.tscn" id="34_tool"]
+[ext_resource type="PackedScene" path="res://scenes/fuel_barrel.tscn" id="35_fuel"]
+[ext_resource type="PackedScene" path="res://scenes/antenna.tscn" id="36_antenna"]
+[ext_resource type="PackedScene" path="res://scenes/cat.tscn" id="37_cat"]
+[ext_resource type="PackedScene" path="res://assets/kenney_space/pipe_supportHigh.glb" id="38_gantry"]
+[ext_resource type="Script" path="res://scripts/mountains.gd" id="39_mountains"]
+[ext_resource type="Script" path="res://scripts/clouds.gd" id="40_clouds"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1"]
 size = Vector2(160, 160)
@@ -273,3 +284,85 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0, 35)
 
 [node name="HouseTower2" parent="." instance=ExtResource("27_house_t")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 12, 0, -42)
+
+[node name="Mountains" type="Node3D" parent="."]
+script = ExtResource("39_mountains")
+
+[node name="Clouds" type="Node3D" parent="."]
+script = ExtResource("40_clouds")
+
+[node name="Rocket" parent="." instance=ExtResource("30_rocket")]
+transform = Transform3D(15, 0, 0, 0, 15, 0, 0, 0, 15, 0, 0, -60)
+
+[node name="GantryA" parent="." instance=ExtResource("38_gantry")]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -22, 0, -48)
+
+[node name="GantryB" parent="." instance=ExtResource("38_gantry")]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 22, 0, -48)
+
+[node name="GantryC" parent="." instance=ExtResource("38_gantry")]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -22, 0, -72)
+
+[node name="GantryD" parent="." instance=ExtResource("38_gantry")]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 22, 0, -72)
+
+[node name="Entrance" parent="." instance=ExtResource("31_entrance")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -45)
+
+[node name="Cockpit" parent="." instance=ExtResource("32_cockpit")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 29, -60)
+
+[node name="Professor" parent="." instance=ExtResource("33_npc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 8)
+npc_name = "Профессор Звёздочкин"
+intro_line = "Привет! Нам нужно 3 ящика с инструментами — поищи по посёлку."
+quest_id = "earth_tools"
+quest_title = "Найти ящики с инструментами"
+quest_target = 3
+
+[node name="Mechanic" parent="." instance=ExtResource("33_npc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 8)
+npc_name = "Механик Гайка"
+intro_line = "Без топлива ракета не полетит! Найди 3 топливные бочки."
+progress_line = "Молодец, ищи ещё бочки!"
+complete_line = "Все три бочки в баках. Готовы к взлёту!"
+quest_id = "earth_fuel"
+quest_title = "Собрать топливные бочки"
+quest_target = 3
+
+[node name="Tool1" parent="." instance=ExtResource("34_tool")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, 16)
+
+[node name="Tool2" parent="." instance=ExtResource("34_tool")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 14)
+
+[node name="Tool3" parent="." instance=ExtResource("34_tool")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0, -10)
+
+[node name="Fuel1" parent="." instance=ExtResource("35_fuel")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 24)
+
+[node name="Fuel2" parent="." instance=ExtResource("35_fuel")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34, 0, 6)
+
+[node name="Fuel3" parent="." instance=ExtResource("35_fuel")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, -16)
+
+[node name="Antenna" parent="." instance=ExtResource("36_antenna")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, -22)
+
+[node name="CatGinger" parent="." instance=ExtResource("37_cat")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 6)
+fur_color = Color(0.95, 0.5, 0.15, 1)
+
+[node name="CatBlack" parent="." instance=ExtResource("37_cat")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 12)
+fur_color = Color(0.12, 0.12, 0.14, 1)
+
+[node name="CatGrey" parent="." instance=ExtResource("37_cat")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, -4)
+fur_color = Color(0.55, 0.57, 0.6, 1)
+
+[node name="CatBengal" parent="." instance=ExtResource("37_cat")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -8)
+fur_color = Color(0.82, 0.6, 0.3, 1)
