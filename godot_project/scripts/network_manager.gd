@@ -8,7 +8,7 @@ extends Node
 const SERVER_URLS := [
 	"ws://localhost:8765",
 	"ws://192.168.1.72:8765",
-	"ws://194.85.251.132:8765",
+	"ws://5.35.127.150:8765",
 ]
 const CONNECT_TIMEOUT := 2.5  # сек на попытку
 
