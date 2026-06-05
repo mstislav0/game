@@ -66,6 +66,9 @@ func _spawn_model() -> void:
 	var scene: PackedScene = GIRL_SCENE if character_type == "girl" else BOY_SCENE
 	_model = scene.instantiate()
 	add_child(_model)
+	# Модели Quaternius смотрят в +Z, а "перёд" тела игрока — это -Z,
+	# поэтому разворачиваем модель на 180°, иначе персонаж "идёт задом наперёд".
+	_model.rotation.y = PI
 	_normalize_model_height()
 	_anim = _find_anim_player(_model)
 	if _anim:
