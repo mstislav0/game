@@ -117,11 +117,23 @@ func _refresh_preview() -> void:
 	_normalize_preview(model)
 	_preview_anim = _find_anim(model)
 	if _preview_anim:
-		for a in _preview_anim.get_animation_list():
-			if a.to_lower().ends_with("idle"):
-				_preview_anim.get_animation(a).loop_mode = Animation.LOOP_LINEAR
-				_preview_anim.play(a)
-				break
+		var idle := _pick_idle(_preview_anim.get_animation_list())
+		if idle != "":
+			_preview_anim.get_animation(idle).loop_mode = Animation.LOOP_LINEAR
+			_preview_anim.play(idle)
+
+func _pick_idle(list: PackedStringArray) -> String:
+	var exact := ""
+	var suffix := ""
+	for a in list:
+		var la := a.to_lower()
+		if la == "idle":
+			exact = a
+		elif suffix == "" and la.ends_with("|idle"):
+			suffix = a
+	if exact != "":
+		return exact
+	return suffix
 
 	# Кольцо цвета у ног
 	_preview_ring = MeshInstance3D.new()

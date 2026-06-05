@@ -72,16 +72,11 @@ func _spawn_model() -> void:
 	_normalize_model_height()
 	_anim = _find_anim_player(_model)
 	if _anim:
-		for a in _anim.get_animation_list():
-			var la := a.to_lower()
-			if _a_idle == "" and la.ends_with("idle"):
-				_a_idle = a
-			elif _a_walk == "" and la.contains("walk"):
-				_a_walk = a
-			elif _a_run == "" and la.contains("run"):
-				_a_run = a
-			elif _a_jump == "" and la.contains("jump"):
-				_a_jump = a
+		var list := _anim.get_animation_list()
+		_a_idle = _pick_anim(list, "idle")
+		_a_walk = _pick_anim(list, "walk")
+		_a_run = _pick_anim(list, "run")
+		_a_jump = _pick_anim(list, "jump")
 		for a in [_a_idle, _a_walk, _a_run]:
 			if a != "" and _anim.has_animation(a):
 				_anim.get_animation(a).loop_mode = Animation.LOOP_LINEAR
@@ -115,6 +110,26 @@ func _find_skeleton(node: Node) -> Skeleton3D:
 		if r:
 			return r
 	return null
+
+# Выбирает анимацию по ключу с приоритетом: точное имя > суффикс "|key"/"_key" > содержит key.
+# Так "Idle" побеждает "Attacking_Idle", а "Walking"/"Running" подхватываются как walk/run.
+static func _pick_anim(list: PackedStringArray, key: String) -> String:
+	var exact := ""
+	var suffix := ""
+	var contains := ""
+	for a in list:
+		var la := a.to_lower()
+		if la == key:
+			exact = a
+		elif suffix == "" and (la.ends_with("|" + key) or la.ends_with("_" + key)):
+			suffix = a
+		elif contains == "" and la.contains(key):
+			contains = a
+	if exact != "":
+		return exact
+	if suffix != "":
+		return suffix
+	return contains
 
 func _find_anim_player(node: Node) -> AnimationPlayer:
 	if node is AnimationPlayer:
