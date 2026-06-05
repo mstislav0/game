@@ -77,16 +77,18 @@ func _build_preview() -> void:
 	panel.add_child(svc)
 
 	var sv := SubViewport.new()
-	sv.transparent_bg = true
+	sv.transparent_bg = false
 	sv.msaa_3d = Viewport.MSAA_4X
 	sv.own_world_3d = true
+	sv.render_target_clear_mode = SubViewport.CLEAR_MODE_ALWAYS
 	svc.add_child(sv)
 
 	var cam := Camera3D.new()
 	cam.fov = 32.0
 	cam.look_at_from_position(Vector3(0, 1.0, 3.2), Vector3(0, 0.95, 0), Vector3.UP)
 	var env := Environment.new()
-	env.background_mode = Environment.BG_CANVAS
+	env.background_mode = Environment.BG_COLOR
+	env.background_color = Color(0.06, 0.07, 0.13, 1)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color(0.8, 0.82, 0.95)
 	env.ambient_light_energy = 1.2
