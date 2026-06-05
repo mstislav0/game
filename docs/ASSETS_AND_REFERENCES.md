@@ -18,6 +18,9 @@
 | Земля (брусчатка PBR) | [ambientCG PavingStones009](https://ambientcg.com/view?id=PavingStones009) | CC0 | `assets/textures/paving_stones/` |
 | Музыка «Cosmic Priest» | [OpenGameArt — Centurion_of_war](https://opengameart.org/content/cosmic-priest) | CC0 | `assets/audio/` |
 | Анимированный кот (Walk/Idle/Jump) | [poly.pizza — Quaternius Cat](https://poly.pizza/m/2f54vbV0In) | CC0 | `assets/cats/cat.glb` |
+| Игрок-мальчик (Idle/Walk/Run/Jump) | [poly.pizza — Animated Human](https://poly.pizza/m/c3Ibh9I3udk) | CC0 | `assets/characters/boy.glb` |
+| Игрок-девочка (Idle/Walk/Run/Jump) | [poly.pizza — Animated Woman](https://poly.pizza/m/9kF7eTDbhO) | CC0 | `assets/characters/girl.glb` |
+| Мяу (звук) | [OpenGameArt — Meow](https://opengameart.org/content/meow) | CC0 | `assets/cats/meow.ogg` |
 
 ### Хорошие источники на будущее
 - [Quaternius Ultimate Animated Animals](https://quaternius.com/packs/ultimateanimatedanimals.html) — 12 зверей, 12+ анимаций, CC0
@@ -52,8 +55,17 @@
 - **Glow/Bloom** + видимый диск солнца (`DirectionalLight.sky_mode=0`).
 - **Бродячие NPC** (коты): random target в радиусе от «дома», Walk-анимация
   при движении, Idle на месте, периодические «Мяу!» — мир кажется обитаемым.
-- **Процедурная анимация шага** для статичных моделей (астронавт Kenney без
-  скелета): bob по Y + наклон по Z пропорционально скорости.
+- **Скелетная анимация игрока**: модели boy/girl с Idle/Walk/Run/Jump.
+  Имена анимаций ищем по подстроке (idle/walk/run/jump), т.к. у разных
+  моделей разные префиксы (`Human Armature|Walk`, `Armature|Walking`).
+- **Автонормализация роста**: разные GLB имеют РАЗНЫЙ внутренний масштаб
+  (boy ~0.076, girl ~0.81). Нельзя задавать фикс-scale! Меряем рост по
+  костям скелета (`get_bone_global_pose`) и масштабируем к TARGET_HEIGHT=1.7,
+  ступни на y=0. См. `player.gd::_normalize_model_height`.
+- **Кастомизация**: пол = две модели (boy/girl), цвет = светящееся кольцо
+  у ног + цвет имени (модели на texture-atlas, поэтому костюм не красим).
+  Внешность гоняется по сети: `NetworkManager.set_appearance` →
+  create_room/join_room → сервер хранит и раздаёт всем.
 
 ## План доведения уровня 1 (Земля) до играбельности
 

@@ -106,7 +106,7 @@ func _spawn_local_player() -> void:
 	_spawn_index += 1
 
 	var p = Player.instantiate()
-	p.setup(NetworkManager.my_id, NetworkManager.my_name, true)
+	p.setup(NetworkManager.my_id, NetworkManager.my_name, true, NetworkManager.my_character, NetworkManager.my_color)
 	p.global_position = spawn_pos
 	add_child(p)
 	players[NetworkManager.my_id] = p
@@ -121,8 +121,9 @@ func _on_player_joined(player_id: String, player_name: String) -> void:
 	var spawn_pos = spawn_points[_spawn_index % spawn_points.size()]
 	_spawn_index += 1
 
+	var ap = NetworkManager.get_appearance(player_id)
 	var p = Player.instantiate()
-	p.setup(player_id, player_name, false)
+	p.setup(player_id, player_name, false, ap.get("character", "boy"), ap.get("color", Color(0.3, 0.6, 1.0, 1)))
 	p.global_position = spawn_pos
 	add_child(p)
 	players[player_id] = p

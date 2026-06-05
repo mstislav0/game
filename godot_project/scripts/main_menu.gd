@@ -11,6 +11,19 @@ var _waiting_for_second := false
 var _pending_action := ""  # "create" | "join"
 var _pending_code := ""
 
+var _character := "boy"
+var _color := Color(0.3, 0.6, 1.0, 1)
+var _char_btns := {}
+var _color_btns := []
+const COLORS := [
+	Color(0.30, 0.60, 1.00),  # синий
+	Color(0.95, 0.30, 0.30),  # красный
+	Color(0.40, 0.85, 0.40),  # зелёный
+	Color(1.00, 0.80, 0.25),  # жёлтый
+	Color(0.80, 0.45, 0.95),  # фиолетовый
+	Color(1.00, 0.55, 0.20),  # оранжевый
+]
+
 func _ready() -> void:
 	NetworkManager.connected_to_server.connect(_on_connected)
 	NetworkManager.disconnected_from_server.connect(_on_disconnected)
@@ -19,8 +32,75 @@ func _ready() -> void:
 	NetworkManager.player_joined.connect(_on_player_joined)
 	NetworkManager.error_occurred.connect(_on_error)
 
+	_build_appearance_ui()
+	_apply_appearance()
 	_set_ui_enabled(true)
-	status_label.text = "Введите имя и нажмите «Создать» или «Войти»"
+	status_label.text = "Введите имя, выберите героя и нажмите «Создать» или «Войти»"
+
+func _build_appearance_ui() -> void:
+	var vbox := $VBox
+	# --- Выбор пола ---
+	var char_row := HBoxContainer.new()
+	char_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	char_row.add_theme_constant_override("separation", 12)
+	for key in [["boy", "👦 Мальчик"], ["girl", "👧 Девочка"]]:
+		var b := Button.new()
+		b.text = key[1]
+		b.toggle_mode = true
+		b.custom_minimum_size = Vector2(170, 46)
+		b.add_theme_font_size_override("font_size", 18)
+		b.pressed.connect(_on_character_chosen.bind(key[0]))
+		char_row.add_child(b)
+		_char_btns[key[0]] = b
+	vbox.add_child(char_row)
+	vbox.move_child(char_row, 1)
+
+	# --- Выбор цвета ---
+	var color_row := HBoxContainer.new()
+	color_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	color_row.add_theme_constant_override("separation", 8)
+	for i in COLORS.size():
+		var sw := Button.new()
+		sw.custom_minimum_size = Vector2(46, 46)
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = COLORS[i]
+		sb.set_corner_radius_all(8)
+		sw.add_theme_stylebox_override("normal", sb)
+		sw.add_theme_stylebox_override("hover", sb)
+		sw.add_theme_stylebox_override("pressed", sb)
+		sw.pressed.connect(_on_color_chosen.bind(i))
+		color_row.add_child(sw)
+		_color_btns.append(sw)
+	vbox.add_child(color_row)
+	vbox.move_child(color_row, 2)
+
+func _on_character_chosen(c: String) -> void:
+	_character = c
+	_apply_appearance()
+
+func _on_color_chosen(i: int) -> void:
+	_color = COLORS[i]
+	_apply_appearance()
+
+func _apply_appearance() -> void:
+	for key in _char_btns:
+		_char_btns[key].button_pressed = (key == _character)
+	# подсветка выбранного цвета — рамка
+	for i in _color_btns.size():
+		var sw: Button = _color_btns[i]
+		var sb: StyleBoxFlat = sw.get_theme_stylebox("normal")
+		if COLORS[i] == _color:
+			sb.border_width_bottom = 4
+			sb.border_width_top = 4
+			sb.border_width_left = 4
+			sb.border_width_right = 4
+			sb.border_color = Color.WHITE
+		else:
+			sb.border_width_bottom = 0
+			sb.border_width_top = 0
+			sb.border_width_left = 0
+			sb.border_width_right = 0
+	NetworkManager.set_appearance(_character, _color)
 
 func _on_name_submitted(_text: String) -> void:
 	_connect()

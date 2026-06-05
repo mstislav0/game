@@ -67,7 +67,12 @@ wss.on("connection", (ws) => {
         do { code = generateRoomCode(); } while (rooms.has(code));
 
         const room = newRoomState();
-        room.players.set(id, { ws, name: msg.name || "Космонавт" });
+        room.players.set(id, {
+          ws,
+          name: msg.name || "Космонавт",
+          character: msg.character || "boy",
+          color: msg.color || "4d99ff",
+        });
         rooms.set(code, room);
         client.roomCode = code;
 
@@ -89,13 +94,15 @@ wss.on("connection", (ws) => {
         }
 
         const playerName = msg.name || "Космонавт";
-        room.players.set(id, { ws, name: playerName });
+        const character = msg.character || "boy";
+        const color = msg.color || "4d99ff";
+        room.players.set(id, { ws, name: playerName, character, color });
         client.roomCode = code;
 
         // Сообщаем вошедшему список игроков и собранные предметы
         const playerList = [];
         for (const [pid, p] of room.players) {
-          if (pid !== id) playerList.push({ id: pid, name: p.name });
+          if (pid !== id) playerList.push({ id: pid, name: p.name, character: p.character, color: p.color });
         }
         send(ws, {
           event: "room_joined",
@@ -105,7 +112,7 @@ wss.on("connection", (ws) => {
         });
 
         // Остальным — новый игрок
-        broadcast(code, { event: "player_joined", id, name: playerName }, ws);
+        broadcast(code, { event: "player_joined", id, name: playerName, character, color }, ws);
         console.log(`[R] ${id} (${playerName}) joined room ${code}`);
         break;
       }

@@ -28,10 +28,13 @@ signal error_occurred(message: String)
 var socket := WebSocketPeer.new()
 var my_id := ""
 var my_name := ""
+var my_character := "boy"
+var my_color := Color(0.3, 0.6, 1.0, 1)
 var room_code := ""
 var is_connected := false
 var initial_players: Array = []  # игроки, бывшие в комнате до нашего входа
 var room_players: Dictionary = {}  # id → name, все известные игроки комнаты (кроме нас)
+var room_appearance: Dictionary = {}  # id → {character, color}
 var initial_collected: Array = []  # ["quest_id:item_id", ...] на момент входа
 var _state := WebSocketPeer.STATE_CLOSED
 var _try_index := -1
@@ -63,11 +66,20 @@ func _try_next() -> void:
 		print("[NET] connect_to_url failed for ", url, " err=", err)
 		_try_next()
 
+func set_appearance(character: String, color: Color) -> void:
+	my_character = character
+	my_color = color
+
 func create_room() -> void:
-	_send({"action": "create_room", "name": my_name})
+	_send({"action": "create_room", "name": my_name, "character": my_character, "color": my_color.to_html(false)})
 
 func join_room(code: String) -> void:
-	_send({"action": "join_room", "code": code, "name": my_name})
+	_send({"action": "join_room", "code": code, "name": my_name, "character": my_character, "color": my_color.to_html(false)})
+
+func get_appearance(pid: String) -> Dictionary:
+	if room_appearance.has(pid):
+		return room_appearance[pid]
+	return {"character": "boy", "color": Color(0.3, 0.6, 1.0, 1)}
 
 func send_collect_item(quest_id: String, item_id: String) -> void:
 	_send({"action": "collect_item", "quest_id": quest_id, "item_id": item_id})
@@ -154,13 +166,16 @@ func _handle_message(text: String) -> void:
 			initial_collected = data.get("collected", [])
 			room_players.clear()
 			for p in players:
-				room_players[p.get("id", "")] = p.get("name", "Космонавт")
+				var ppid = p.get("id", "")
+				room_players[ppid] = p.get("name", "Космонавт")
+				room_appearance[ppid] = {"character": p.get("character", "boy"), "color": Color.html(p.get("color", "4d99ff"))}
 			emit_signal("room_joined", room_code, players)
 			emit_signal("initial_collected_received", initial_collected)
 		"player_joined":
 			var pid = data.get("id", "")
 			var pname = data.get("name", "Космонавт")
 			room_players[pid] = pname
+			room_appearance[pid] = {"character": data.get("character", "boy"), "color": Color.html(data.get("color", "4d99ff"))}
 			emit_signal("player_joined", pid, pname)
 		"player_left":
 			var pid = data.get("id", "")
