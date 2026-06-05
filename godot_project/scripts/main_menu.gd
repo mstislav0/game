@@ -33,9 +33,148 @@ func _ready() -> void:
 	NetworkManager.error_occurred.connect(_on_error)
 
 	_build_appearance_ui()
+	_build_preview()
 	_apply_appearance()
+	_refresh_preview()
 	_set_ui_enabled(true)
 	status_label.text = "Введите имя, выберите героя и нажмите «Создать» или «Войти»"
+
+const BOY_SCENE := preload("res://assets/characters/boy.glb")
+const GIRL_SCENE := preload("res://assets/characters/girl.glb")
+var _preview_pivot: Node3D
+var _preview_anim: AnimationPlayer
+var _preview_ring: MeshInstance3D
+
+func _build_preview() -> void:
+	# Рамка-панель слева
+	var panel := Panel.new()
+	panel.anchor_top = 0.5
+	panel.anchor_bottom = 0.5
+	panel.offset_left = 70
+	panel.offset_top = -190
+	panel.offset_right = 70 + 300
+	panel.offset_bottom = 200
+	panel.self_modulate = Color(0, 0, 0, 0.35)
+	add_child(panel)
+
+	var title := Label.new()
+	title.text = "Твой герой"
+	title.add_theme_font_size_override("font_size", 20)
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.anchor_right = 1.0
+	title.offset_top = 8
+	title.offset_bottom = 34
+	panel.add_child(title)
+
+	var svc := SubViewportContainer.new()
+	svc.stretch = true
+	svc.anchor_right = 1.0
+	svc.anchor_bottom = 1.0
+	svc.offset_left = 10
+	svc.offset_top = 40
+	svc.offset_right = -10
+	svc.offset_bottom = -10
+	panel.add_child(svc)
+
+	var sv := SubViewport.new()
+	sv.transparent_bg = true
+	sv.msaa_3d = Viewport.MSAA_4X
+	sv.own_world_3d = true
+	svc.add_child(sv)
+
+	var cam := Camera3D.new()
+	cam.fov = 32.0
+	cam.look_at_from_position(Vector3(0, 1.0, 3.2), Vector3(0, 0.95, 0), Vector3.UP)
+	var env := Environment.new()
+	env.background_mode = Environment.BG_CANVAS
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	env.ambient_light_color = Color(0.8, 0.82, 0.95)
+	env.ambient_light_energy = 1.2
+	env.tonemap_mode = Environment.TONE_MAPPER_AGX
+	cam.environment = env
+	sv.add_child(cam)
+
+	var key := DirectionalLight3D.new()
+	key.rotation_degrees = Vector3(-35, -130, 0)
+	key.light_energy = 1.4
+	sv.add_child(key)
+
+	_preview_pivot = Node3D.new()
+	sv.add_child(_preview_pivot)
+
+func _refresh_preview() -> void:
+	if _preview_pivot == null:
+		return
+	for c in _preview_pivot.get_children():
+		c.queue_free()
+	_preview_anim = null
+
+	var scene: PackedScene = GIRL_SCENE if _character == "girl" else BOY_SCENE
+	var model: Node3D = scene.instantiate()
+	_preview_pivot.add_child(model)
+	_normalize_preview(model)
+	_preview_anim = _find_anim(model)
+	if _preview_anim:
+		for a in _preview_anim.get_animation_list():
+			if a.to_lower().ends_with("idle"):
+				_preview_anim.get_animation(a).loop_mode = Animation.LOOP_LINEAR
+				_preview_anim.play(a)
+				break
+
+	# Кольцо цвета у ног
+	_preview_ring = MeshInstance3D.new()
+	var torus := TorusMesh.new()
+	torus.inner_radius = 0.45
+	torus.outer_radius = 0.62
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = _color
+	mat.emission_enabled = true
+	mat.emission = _color
+	mat.emission_energy_multiplier = 2.0
+	torus.material = mat
+	_preview_ring.mesh = torus
+	_preview_ring.position = Vector3(0, 0.03, 0)
+	_preview_pivot.add_child(_preview_ring)
+
+func _normalize_preview(model: Node3D) -> void:
+	var sk := _find_skel(model)
+	if sk == null:
+		return
+	var to_local := model.global_transform.affine_inverse() * sk.global_transform
+	var miny := INF
+	var maxy := -INF
+	for b in sk.get_bone_count():
+		var lp: Vector3 = to_local * sk.get_bone_global_pose(b).origin
+		miny = minf(miny, lp.y)
+		maxy = maxf(maxy, lp.y)
+	var h := maxy - miny
+	if h <= 0.001:
+		return
+	var f := 1.7 / h
+	model.scale = Vector3(f, f, f)
+	model.position.y = -miny * f
+
+func _find_skel(n: Node) -> Skeleton3D:
+	if n is Skeleton3D:
+		return n
+	for c in n.get_children():
+		var r = _find_skel(c)
+		if r:
+			return r
+	return null
+
+func _find_anim(n: Node) -> AnimationPlayer:
+	if n is AnimationPlayer:
+		return n
+	for c in n.get_children():
+		var r = _find_anim(c)
+		if r:
+			return r
+	return null
+
+func _process(delta: float) -> void:
+	if _preview_pivot:
+		_preview_pivot.rotation.y += delta * 0.6
 
 func _build_appearance_ui() -> void:
 	var vbox := $VBox
@@ -77,10 +216,12 @@ func _build_appearance_ui() -> void:
 func _on_character_chosen(c: String) -> void:
 	_character = c
 	_apply_appearance()
+	_refresh_preview()
 
 func _on_color_chosen(i: int) -> void:
 	_color = COLORS[i]
 	_apply_appearance()
+	_refresh_preview()
 
 func _apply_appearance() -> void:
 	for key in _char_btns:
@@ -165,7 +306,9 @@ func _on_join_pressed() -> void:
 func _on_room_created(code: String) -> void:
 	room_code_label.text = "Код комнаты: %s" % code
 	room_code_label.show()
-	status_label.text = "Комната создана! Ждём второго игрока..."
+	# Сразу подставляем код в поле — удобно скопировать и продиктовать
+	room_input.text = code
+	status_label.text = "Комната создана! Передайте код: %s. Ждём второго игрока..." % code
 	_waiting_for_second = true
 
 func _on_room_joined(code: String, _players: Array) -> void:
