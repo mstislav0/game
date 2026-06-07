@@ -98,7 +98,9 @@ func _normalize_model_height() -> void:
 	var h := maxy - miny
 	if h <= 0.001:
 		return
-	var f := TARGET_HEIGHT / h
+	# Мальчик-модель крупнее по пропорциям — делаем его на 40% меньше
+	var target: float = TARGET_HEIGHT * (0.6 if character_type == "boy" else 1.0)
+	var f := target / h
 	_model.scale = Vector3(f, f, f)
 	_model.position.y = -miny * f
 

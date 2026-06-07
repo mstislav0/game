@@ -164,7 +164,8 @@ func _normalize_preview(model: Node3D) -> void:
 	var h := maxy - miny
 	if h <= 0.001:
 		return
-	var f := 1.7 / h
+	var target: float = 1.7 * (0.6 if _character == "boy" else 1.0)
+	var f := target / h
 	model.scale = Vector3(f, f, f)
 	model.position.y = -miny * f
 
